@@ -1,0 +1,20 @@
+{
+	"name": "mshuffle",
+	"version": "0.0.1",
+	"description": "A music shuffling algorithm that takes into account your listening history and current preferences.",
+	"main": "mshuffle.js",
+	"scripts": {
+		"start": "node mshuffle.js"
+	},
+	"dependencies": {
+		"express": "~4.0.0",
+		"body-parser": "1.14.0"
+	},
+	"engines": {
+		"node": "4.4.5"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/msilvprog7/mshuffle"
+	}
+}
