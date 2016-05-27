@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 		<!--	Local CSS Resources -->
 		<link rel="stylesheet" href="css/buttons.css">
+		<link rel="stylesheet" href="css/display.css">
 	</head>
 	<body>
 		<!-- Navbar -->
@@ -47,11 +48,14 @@
 					</p>
 				</div>
 				<div class="col-xs-12 col-sm-9 col-med-9 col-lg-9">
-					<h1>Demo</h1>
-					<p>
-						Enough talk, let's get started. <br /><br />
+					<div class="not-logged-in">
+						<h1>Let's get started</h1>
 						<button type="button" class="btn btn-success rounded" onclick="location.href='/login'">Log in with Spotify</button>
-					</p>
+					</div>
+					<div class="logged-in">
+						<h1><span name="spotifyFirstname"></span>'s Playlists</h1>
+						<div class="playlists"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -62,6 +66,12 @@
 		<!-- 	Bootstrap -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<!--	Local Javascript Resources -->
-
+		<script src="js/Display.js"></script>
+		<script src="js/Spotify.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				SpotifyClientAPI.getUserInfo();
+			});
+		</script>
 	</body>
 </html>
