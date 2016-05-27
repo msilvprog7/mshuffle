@@ -3,7 +3,9 @@
  */
 var express = require('express'),
 	bodyParser = require('body-parser'),
-	app = express();
+	app = express(),
+	cookieParser = require('cookie-parser'),
+	SpotifyAPI = require('./lib/spotify/SpotifyAPI.js');
 
 
 /**
@@ -13,6 +15,7 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + "/site"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 
 
 /**
@@ -22,8 +25,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 /**
  * Home Route (/)
  */
-app.post('/', function (request, response) {
+app.post('/', function (req, res) {
 	res.render("index.html");
+});
+
+/**
+ * Log in Route (/login)
+ */
+app.get('/login', function (req, res) {
+	SpotifyAPI.login(res);
 });
 
 
