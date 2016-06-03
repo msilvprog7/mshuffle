@@ -14,8 +14,11 @@ var SpotifyClientAPI = (function () {
 						if (response !== undefined && response.logged_in !== undefined && response.logged_in && response.info !== undefined) {
 							// User logged in - use the info
 							DisplayAPI.showUserInfo(response.info);
-						} else if (response !== undefined && response.error !== undefined) { 
-							console.error("Error: Spotify Client API - " + response.error);
+							DisplayAPI.loggedIn();
+						} else if (response !== undefined && response.error !== undefined) {
+							// Not logged in - show alternatives
+							console.log("Error: Spotify Client API - " + response.error);
+							DisplayAPI.notLoggedIn();
 						}
 					},
 					error: function () {

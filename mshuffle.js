@@ -5,8 +5,8 @@ var express = require('express'),
 	bodyParser = require('body-parser'),
 	app = express(),
 	cookieParser = require('cookie-parser'),
-	SpotifyAPI = require('./lib/spotify/SpotifyAPI.js'),
-	error;
+	session = require('express-session'),
+	SpotifyAPI = require('./lib/spotify/SpotifyAPI.js');
 
 
 /**
@@ -17,6 +17,7 @@ app.use(express.static(__dirname + "/site"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use(session({resave: true, saveUninitialized: true, secret: SpotifyAPI.generateState(16)}));
 
 
 /**
@@ -62,12 +63,24 @@ app.get('/login', function (req, res) {
  * Callback Route for Spotify Auth (/callback)
  */
 app.get('/callback', function (req, res) {
-	var onSuccess = function () {
-		// Route to index
+	var onSuccess = function (access_token, refresh_token) {
+		// Route to index (session already set with access and refresh tokens)
 		res.redirect('/');
 	};
 
 	SpotifyAPI.callback(req, res, onSuccess, onError);
+});
+
+/**
+ * Refresh token Route for Spotify Auth (/refresh_token)
+ */
+app.get('/refresh-token', function (req, res) {
+	var onSuccess = function (access_token) {
+		// Route to index (session already set with new access token)
+		res.redirect('/');
+	};
+
+	SpotifyAPI.refreshToken(req, res, onSuccess, onError);
 });
 
 
