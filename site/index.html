@@ -53,8 +53,23 @@
 						<button type="button" class="btn btn-success rounded" onclick="location.href='/login'">Log in with Spotify</button>
 					</div>
 					<div class="logged-in">
-						<h1><span name="spotifyFirstname"></span>'s Playlists</h1>
-						<div class="playlists"></div>
+						<div class="view-playlists">
+							<h1><span name="firstname"></span>'s Playlists</h1>
+							<div name="playlists" class="playlists"></div>
+							</div>
+						<div class="view-playlist">
+							<h1><a onclick="DisplayAPI.viewPlaylists()"><i class='fa fa-angle-left'></i></a> <span name="playlistName"></span></h1>
+							<div class="mshufflePlayer">
+								<img name="playlistImage" src="" />
+								<div name="playlistSong" class="playlistSong">Home in Florence</div>
+								<div class="mshuffleControls">
+									<div class="mshuffleControl mshuffleEnjoy"><i class="fa fa-thumbs-up"></i></div>
+									<div class="mshuffleControl mshuffleDislike"><i class="fa fa-thumbs-down"></i></div>
+									<div class="mshuffleControl mshufflePlay"><i class="fa fa-play"></i></div>
+									<div class="mshuffleControl mshuffleSkip"><i class="fa fa-step-forward"></i></div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -67,10 +82,11 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<!--	Local Javascript Resources -->
 		<script src="js/Display.js"></script>
-		<script src="js/Spotify.js"></script>
+		<script src="js/MshuffleClient.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function () {
-				SpotifyClientAPI.getUserInfo();
+				MshuffleClientAPI.getUserInfo();
+				MshuffleClientAPI.getPlaylists();
 			});
 		</script>
 	</body>

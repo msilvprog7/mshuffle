@@ -6,7 +6,8 @@ var express = require('express'),
 	app = express(),
 	cookieParser = require('cookie-parser'),
 	session = require('express-session'),
-	SpotifyAPI = require('./lib/spotify/SpotifyAPI.js');
+	SpotifyAPI = require('./lib/spotify/Spotify.js'),
+	MshuffleAPI = require('./lib/mshuffle/Mshuffle.js');
 
 
 /**
@@ -24,7 +25,7 @@ app.use(session({resave: true, saveUninitialized: true, secret: SpotifyAPI.gener
  * Helpers
  */
 
-onError = function (error, error_code) {
+onErrorDisplay = function (error, error_code) {
 	// Handle errors
 	if (error === undefined) {
 		console.error("Error: " + error);
@@ -33,6 +34,10 @@ onError = function (error, error_code) {
 	}
 };
 
+onErrorStatus = function (res, status, message) {
+	res.status(status).send(message);
+}
+
 
 /**
  * Routes
@@ -40,6 +45,7 @@ onError = function (error, error_code) {
 
 /**
  * Home Route (/)
+ * Use this end point to render the web page
  */
 app.post('/', function (req, res) {
 	res.render("index.html");
@@ -47,20 +53,66 @@ app.post('/', function (req, res) {
 
 /**
  * User info Route (/user-info)
+ * Use this end point to get user information (name, etc.)
  */
 app.get('/user-info', function (req, res) {
-	SpotifyAPI.getUserInfo(req, res);
+	var onSuccess = function (data) {
+			res.status(200).send(data);
+		},
+		onError = function (status, message) {
+			onErrorStatus(res, status, message);
+		};
+
+	SpotifyAPI.getUserInfo(req, onSuccess, onError);
+});
+
+/**
+ * Playlists Route (/playlists)
+ * Use this end point to get a user's playlists
+ */
+app.get('/playlists', function (req, res) {
+	var onSuccess = function (data) {
+			res.status(200).send(data);
+		},
+		onError = function (status, message) {
+			onErrorStatus(res, status, message);
+		};
+
+	SpotifyAPI.getPlaylists(req, onSuccess, onError);
+});
+
+/**
+ * Playlist Route (/playlists/{owner_id}/{playlist_id})
+ * Use this end point to retrieve a playlist and apply mshuffle to it
+ * for a new listening session
+ */
+app.get('/playlists/:ownerId/:playlistId', function (req, res) {
+	var onSuccess = function (data) {
+			// After retrieving the playlist,
+			// load it into mshuffle
+			MshuffleAPI.load(req.session.access_token, data.playlist);
+
+			// Return success
+			res.status(200).send(MshuffleAPI.getSession(req.session.access_token));
+		},
+		onError = function (status, message) {
+			onErrorStatus(res, status, message);
+		};
+
+	SpotifyAPI.getPlaylist(req, req.params.ownerId, req.params.playlistId, onSuccess, onError);
 });
 
 /**
  * Log in Route (/login)
+ * Use this end point to allow a user to route to the music service's login
  */
 app.get('/login', function (req, res) {
 	SpotifyAPI.login(req, res);
 });
 
 /**
- * Callback Route for Spotify Auth (/callback)
+ * Callback Route for Music service Auth (/callback)
+ * Use this end point as a callback from a music service's authentication
  */
 app.get('/callback', function (req, res) {
 	var onSuccess = function (access_token, refresh_token) {
@@ -68,11 +120,12 @@ app.get('/callback', function (req, res) {
 		res.redirect('/');
 	};
 
-	SpotifyAPI.callback(req, res, onSuccess, onError);
+	SpotifyAPI.callback(req, res, onSuccess, onErrorDisplay);
 });
 
 /**
- * Refresh token Route for Spotify Auth (/refresh_token)
+ * Refresh token Route for Music service Auth (/refresh_token)
+ * Use this end point to acquire a new access token for the music service's authentication
  */
 app.get('/refresh-token', function (req, res) {
 	var onSuccess = function (access_token) {
@@ -80,7 +133,7 @@ app.get('/refresh-token', function (req, res) {
 		res.redirect('/');
 	};
 
-	SpotifyAPI.refreshToken(req, res, onSuccess, onError);
+	SpotifyAPI.refreshToken(req, res, onSuccess, onErrorDisplay);
 });
 
 
