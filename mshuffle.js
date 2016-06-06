@@ -103,6 +103,41 @@ app.get('/playlists/:ownerId/:playlistId', function (req, res) {
 });
 
 /**
+ * Next route (/next)
+ * Use this end point to ask mshuffle to generate the next song to play
+ */
+app.get('/next', function (req, res) {
+	res.status(200).send(MshuffleAPI.next(req.session.access_token));
+});
+
+/**
+ * Skip route (/skip)
+ * Use this end point to ask mshuffle to skip to the next song to play,
+ * with an implication that the user did not want to listen to the song
+ */
+app.get('/skip', function (req, res) {
+	res.status(200).send(MshuffleAPI.skip(req.session.access_token));
+});
+
+/**
+ * Enjoy route (/enjoy)
+ * Use this end point to inform mshuffle that the current song was enjoyed
+ * by the user
+ */
+app.get('/enjoy', function (req, res) {
+	res.status(200).send(MshuffleAPI.enjoy(req.session.access_token));
+});
+
+/**
+ * Dislike route (/dislike)
+ * Use this end point to inform mshuffle that the current song was disliked
+ * by the user
+ */
+app.get('/dislike', function (req, res) {
+	res.status(200).send(MshuffleAPI.dislike(req.session.access_token));
+});
+
+/**
  * Log in Route (/login)
  * Use this end point to allow a user to route to the music service's login
  */

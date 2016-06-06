@@ -59,14 +59,15 @@
 							</div>
 						<div class="view-playlist">
 							<h1><a onclick="DisplayAPI.viewPlaylists()"><i class='fa fa-angle-left'></i></a> <span name="playlistName"></span></h1>
-							<div class="mshufflePlayer">
-								<img name="playlistImage" src="" />
-								<div name="playlistSong" class="playlistSong">Home in Florence</div>
-								<div class="mshuffleControls">
-									<div class="mshuffleControl mshuffleEnjoy"><i class="fa fa-thumbs-up"></i></div>
-									<div class="mshuffleControl mshuffleDislike"><i class="fa fa-thumbs-down"></i></div>
-									<div class="mshuffleControl mshufflePlay"><i class="fa fa-play"></i></div>
-									<div class="mshuffleControl mshuffleSkip"><i class="fa fa-step-forward"></i></div>
+							<div class="mshuffle-player">
+								<img name="playlistImage" src="" onclick="MshuffleClientAPI.play()" />
+								<div name="playlistSongName" class="playlist-song"></div>
+								<div name="playlistSongArtist" class="playlist-artist"></div>
+								<div class="mshuffle-controls">
+									<div class="mshuffle-control mshuffle-enjoy" onclick="MshuffleClientAPI.enjoy()"><i class="fa fa-thumbs-up"></i></div>
+									<div class="mshuffle-control mshuffle-dislike" onclick="MshuffleClientAPI.dislike()"><i class="fa fa-thumbs-down"></i></div>
+									<div class="mshuffle-control mshuffle-play" onclick="MshuffleClientAPI.play()"><i class="fa fa-play"></i></div>
+									<div class="mshuffle-control mshuffle-skip" onclick="MshuffleClientAPI.skip()"><i class="fa fa-step-forward"></i></div>
 								</div>
 							</div>
 						</div>
@@ -82,6 +83,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<!--	Local Javascript Resources -->
 		<script src="js/Display.js"></script>
+		<script src="js/Audio.js"></script>
 		<script src="js/MshuffleClient.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function () {

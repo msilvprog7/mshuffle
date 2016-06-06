@@ -57,6 +57,7 @@ var DisplayAPI = (function () {
 		 * Go back to viewing the playlists
 		 */
 		viewPlaylists: function () {
+			MshuffleClientAPI.stop();
 			$(".view-playlist").hide();
 			$(".view-playlists").show();
 		},
@@ -65,16 +66,44 @@ var DisplayAPI = (function () {
 		 * Handle displaying the user's playlist
 		 */
 		showPlaylist: function (playlist) {
-			console.log(playlist);
 			// Display info for playlist
 			$("[name='playlistName']").html(playlist.name);
 			$("img[name='playlistImage']").attr("src", playlist.image.url);
+			$("[name='playlistSongName']").html(playlist.name);
+			$("[name='playlistSongArtist']").html("-------");
 
 			// Show content
 			$(".view-playlists").hide();
 			$(".view-playlist").show();
+		},
 
-			// TODO: Call mshuffle to get first song
+		/**
+		 * Change the play icons
+		 */
+		play: function (playing) {
+			if (playing) {
+				// To pause icon
+				$(".mshuffle-play").html("<i class='fa fa-pause'></i>");
+			} else {
+				// To play icon
+				$(".mshuffle-play").html("<i class='fa fa-play'></i>");
+			}
+		},
+
+		/**
+		 * Set the current song information
+		 */
+		setSong: function (song) {
+			// Display info for new song
+			$("[name='playlistSongName']").html(song.name);
+			$("[name='playlistSongArtist']").html(song.artists.reduce(function (prev, curr, index) {
+				if (index === 0) {
+					return curr.name;
+				} else {
+					return prev.name + ", " + curr.name;
+				}
+			}, ""));
+			$("img[name='playlistImage']").attr("src", song.album.image.url);
 		}
 	};
 })();
