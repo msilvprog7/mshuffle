@@ -104,6 +104,13 @@ var DisplayAPI = (function () {
 				}
 			}, ""));
 			$("img[name='playlistImage']").attr("src", song.album.image.url);
+		},
+
+		/**
+		 * Show PMF for probabilities of current shuffle
+		 */
+		showPMF: function (pmf) {
+			ChartAPI.setPMFData(pmf);
 		}
 	};
 })();

@@ -138,6 +138,14 @@ app.get('/dislike', function (req, res) {
 });
 
 /**
+ * Probability Mass Function route (/pmf)
+ * Use this end point to retrieve the current PMF for the current song shuffling
+ */
+app.get('/pmf', function (req, res) {
+	res.status(200).send(MshuffleAPI.pmf(req.session.access_token));
+});
+
+/**
  * Log in Route (/login)
  * Use this end point to allow a user to route to the music service's login
  */

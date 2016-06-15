@@ -47,6 +47,8 @@ var MshuffleClientAPI = (function () {
 					if (response !== undefined && response.current !== undefined) {
 						MshuffleClientAPI.setCurrent(response.current);
 						MshuffleClientAPI.play();
+						// Update probabilities visualized
+						MshuffleClientAPI.getPMF();
 					} else {
 						console.log("Error: Mshuffle Client API - Getting next song");
 					}
@@ -73,6 +75,8 @@ var MshuffleClientAPI = (function () {
 					if (response !== undefined && response.current !== undefined) {
 						MshuffleClientAPI.setCurrent(response.current);
 						MshuffleClientAPI.play();
+						// Update probabilities visualized
+						MshuffleClientAPI.getPMF();
 					} else {
 						console.log("Error: Mshuffle Client API - Skipping to next song");
 					}
@@ -113,6 +117,26 @@ var MshuffleClientAPI = (function () {
 					console.error("Error: Mshuffle Client API - Disliking current song");
 				}
 			});
+		},
+
+		/**
+		 * Get mshuffle PMF for visualization
+		 */
+		getPMF: function () {
+			$.ajax({
+				url: "/pmf",
+				type: "GET",
+				success: function (response) {
+					if (response !== undefined && response.pmf !== undefined) {
+						DisplayAPI.showPMF(response.pmf);
+					} else {
+						console.log("Error: Mshuffle Client API - Retrieving PMF of shuffle");
+					}
+				}, 
+				error: function () {
+					console.error("Error: Mshuffle Client API - Retrieving PMF of shuffle");
+				}
+			})
 		},
 
 		/**
