@@ -57,12 +57,11 @@ var ChartAPI = (function () {
 		},
 
 		/**
-		 * Reset the canvas and the chart
+		 * Reset the chart
 		 */
 		reset: function (data) {
 			if (chart !== undefined && chart !== null) {
 				chart.destroy();
-				// ctx.clearRect(0, 0, canvas.width, canvas.height);
 			}
 
 			chart = undefined;
