@@ -6,7 +6,15 @@ Implemented with NodeJS and the Spotify Web API.
 
 Install node package with `npm install`
 
+### Spotify Web App credentials
+
 Create a __Spotify Web Application__ and enter your credentials in `lib/spotify/SpotifyCredentials.js`
+
+If you are developing, please first run the following command to prevent yourself from uploading your credentials to the repository:
+
+```
+git update-index --assume-unchanged lib/spotify/SpotifyCredentials.js
+```
 
 ## Running
 

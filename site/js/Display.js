@@ -75,6 +75,9 @@ var DisplayAPI = (function () {
 			// Show content
 			$(".view-playlists").hide();
 			$(".view-playlist").show();
+
+			// Clear chart and force it to re-initialize on next data
+			ChartAPI.reset();
 		},
 
 		/**

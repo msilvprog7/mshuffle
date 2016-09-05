@@ -241,6 +241,8 @@ var MshuffleClientAPI = (function () {
 					if (response !== undefined && response.id !== undefined && response.songs !== undefined) {
 						playlist = response;
 						DisplayAPI.showPlaylist(response);
+						// Get the PMF to display
+						MshuffleClientAPI.getPMF();
 					} else if (response !== undefined && response.error !== undefined) {
 						// Error getting playlists
 						console.log("Error: Mshuffle Client API - " + response.error);
