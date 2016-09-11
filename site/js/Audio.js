@@ -26,6 +26,10 @@ var AudioAPI = (function () {
 		 * Pause song
 		 */
 		pause: function () {
+			if (!audio) {
+				return;
+			}
+
 			audio.pause();
 		},
 
@@ -33,6 +37,10 @@ var AudioAPI = (function () {
 		 * Play song
 		 */
 		play: function () {
+			if (!audio) {
+				return;
+			}
+			
 			audio.play();
 		}
 	};
