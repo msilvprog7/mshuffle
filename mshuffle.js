@@ -20,23 +20,27 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(session({resave: true, saveUninitialized: true, secret: SpotifyAPI.generateState(16)}));
 
+/**
+ * Set up Mshuffle API
+ */
+MshuffleAPI.init(SpotifyAPI); // Reference to Spotify API
+
 
 /**
  * Helpers
  */
 
-onErrorDisplay = function (error, error_code) {
-	// Handle errors
-	if (error === undefined) {
-		console.error("Error: " + error);
-	} else {
-		console.error("An Unknown Error Occurred");
-	}
-};
-
-onErrorStatus = function (res, status, message) {
-	res.status(status).send(message);
-}
+var onErrorDisplay = function (error, error_code) {
+		// Handle errors
+		if (!error) {
+			console.error("Error: " + error);
+		} else {
+			console.error("An Unknown Error Occurred");
+		}
+	},
+	onErrorStatus = function (res, status, message) {
+		res.status(status).send(message);
+	};
 
 
 /**
@@ -125,7 +129,14 @@ app.get('/skip', function (req, res) {
  * by the user
  */
 app.get('/enjoy', function (req, res) {
-	res.status(200).send(MshuffleAPI.enjoy(req.session.access_token));
+	var onSuccess = function (data) {
+			res.status(200).send(data);
+		},
+		onError = function (status, message) {
+			onErrorStatus(res, status, message);
+		};
+	
+	MshuffleAPI.enjoy(req.session.access_token, onSuccess, onError);
 });
 
 /**
@@ -134,7 +145,22 @@ app.get('/enjoy', function (req, res) {
  * by the user
  */
 app.get('/dislike', function (req, res) {
-	res.status(200).send(MshuffleAPI.dislike(req.session.access_token));
+	var onSuccess = function (data) {
+			res.status(200).send(data);
+		},
+		onError = function (status, message) {
+			onErrorStatus(res, status, message);
+		};
+	
+	MshuffleAPI.dislike(req.session.access_token, onSuccess, onError);
+});
+
+/**
+ * Probability Mass Function route (/pmf)
+ * Use this end point to retrieve the current PMF for the current song shuffling
+ */
+app.get('/pmf', function (req, res) {
+	res.status(200).send(MshuffleAPI.pmf(req.session.access_token));
 });
 
 /**

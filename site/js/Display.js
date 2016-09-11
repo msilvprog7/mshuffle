@@ -36,7 +36,7 @@ var DisplayAPI = (function () {
 		showPlaylists: function (playlists) {
 			// Add each playlist item
 			playlists.forEach(function (playlist) {
-				var img = (playlist.image !== undefined && playlist.image !== null) ? "<img src='" + playlist.image.url + "' />" : "",
+				var img = (playlist.image) ? "<img src='" + playlist.image.url + "' />" : "",
 					div = $("<div />", {
 						"class": "playlist",
 						html: img + "<span>" + playlist.name + "</span>",
@@ -75,6 +75,9 @@ var DisplayAPI = (function () {
 			// Show content
 			$(".view-playlists").hide();
 			$(".view-playlist").show();
+
+			// Clear chart and force it to re-initialize on next data
+			ChartAPI.reset();
 		},
 
 		/**
@@ -96,14 +99,15 @@ var DisplayAPI = (function () {
 		setSong: function (song) {
 			// Display info for new song
 			$("[name='playlistSongName']").html(song.name);
-			$("[name='playlistSongArtist']").html(song.artists.reduce(function (prev, curr, index) {
-				if (index === 0) {
-					return curr.name;
-				} else {
-					return prev.name + ", " + curr.name;
-				}
-			}, ""));
+			$("[name='playlistSongArtist']").html(song.artists.map(function(artist) { return artist.name; }).join(", "));
 			$("img[name='playlistImage']").attr("src", song.album.image.url);
+		},
+
+		/**
+		 * Show PMF for probabilities of current shuffle
+		 */
+		showPMF: function (pmf) {
+			ChartAPI.setPMFData(pmf);
 		}
 	};
 })();

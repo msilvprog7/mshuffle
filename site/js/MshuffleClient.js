@@ -44,9 +44,11 @@ var MshuffleClientAPI = (function () {
 				url: "/next",
 				type: "GET",
 				success: function (response) {
-					if (response !== undefined && response.current !== undefined) {
+					if (response && response.current) {
 						MshuffleClientAPI.setCurrent(response.current);
 						MshuffleClientAPI.play();
+						// Update probabilities visualized
+						MshuffleClientAPI.getPMF();
 					} else {
 						console.log("Error: Mshuffle Client API - Getting next song");
 					}
@@ -70,9 +72,11 @@ var MshuffleClientAPI = (function () {
 				url: "/skip",
 				type: "GET",
 				success: function (response) {
-					if (response !== undefined && response.current !== undefined) {
+					if (response && response.current) {
 						MshuffleClientAPI.setCurrent(response.current);
 						MshuffleClientAPI.play();
+						// Update probabilities visualized
+						MshuffleClientAPI.getPMF();
 					} else {
 						console.log("Error: Mshuffle Client API - Skipping to next song");
 					}
@@ -91,7 +95,11 @@ var MshuffleClientAPI = (function () {
 				url: "/enjoy",
 				type: "GET",
 				success: function (response) {
-					// Nothing, currently
+					if (response && response.pmf) {
+						DisplayAPI.showPMF(response.pmf);
+					} else {
+						console.log("Error: Mshuffle Client API - Enjoying current song");
+					}
 				},
 				error: function () {
 					console.error("Error: Mshuffle Client API - Enjoying current song");
@@ -107,12 +115,36 @@ var MshuffleClientAPI = (function () {
 				url: "/dislike",
 				type: "GET",
 				success: function (response) {
-					// Nothing, currently
+					if (response && response.pmf) {
+						DisplayAPI.showPMF(response.pmf);
+					} else {
+						console.log("Error: Mshuffle Client API - Disliking current song");
+					}
 				},
 				error: function () {
 					console.error("Error: Mshuffle Client API - Disliking current song");
 				}
 			});
+		},
+
+		/**
+		 * Get mshuffle PMF for visualization
+		 */
+		getPMF: function () {
+			$.ajax({
+				url: "/pmf",
+				type: "GET",
+				success: function (response) {
+					if (response && response.pmf) {
+						DisplayAPI.showPMF(response.pmf);
+					} else {
+						console.log("Error: Mshuffle Client API - Retrieving PMF of shuffle");
+					}
+				}, 
+				error: function () {
+					console.error("Error: Mshuffle Client API - Retrieving PMF of shuffle");
+				}
+			})
 		},
 
 		/**
@@ -140,7 +172,7 @@ var MshuffleClientAPI = (function () {
 		 */
 		controlMusic: function () {
 			// Check to make sure preview is available
-			if (currentSong.preview === undefined || currentSong.preview === null) {
+			if (!currentSong.preview) {
 				console.error(currentSong.name + " does not have a preview to listen to, changing to next song.");
 				MshuffleClientAPI.next();
 				return;
@@ -168,11 +200,11 @@ var MshuffleClientAPI = (function () {
 				url: "/user-info",
 				type: "GET",
 				success: function (response) {
-					if (response !== undefined && response.logged_in !== undefined && response.logged_in && response.info !== undefined) {
+					if (response && response.logged_in && response.info) {
 						// User logged in - use the info
 						DisplayAPI.showUserInfo(response.info);
 						DisplayAPI.loggedIn();
-					} else if (response !== undefined && response.error !== undefined) {
+					} else if (response && response.error) {
 						// Not logged in - show alternatives
 						console.log("Error: Mshuffle Client API - " + response.error);
 						DisplayAPI.notLoggedIn();
@@ -193,9 +225,9 @@ var MshuffleClientAPI = (function () {
 				url: "/playlists",
 				type: "GET",
 				success: function (response) {
-					if (response !== undefined && response.logged_in !== undefined && response.logged_in && response.playlists !== undefined) {
+					if (response && response.logged_in && response.playlists) {
 						DisplayAPI.showPlaylists(response.playlists);
-					} else if (response !== undefined && response.error !== undefined) {
+					} else if (response && response.error) {
 						// Error getting playlists
 						console.log("Error: Mshuffle Client API - " + response.error);
 					}
@@ -214,10 +246,12 @@ var MshuffleClientAPI = (function () {
 				url: "/playlists/" + ownerId + "/" + playlistId,
 				type: "GET",
 				success: function (response) {
-					if (response !== undefined && response.id !== undefined && response.songs !== undefined) {
+					if (response && response.id && response.songs) {
 						playlist = response;
 						DisplayAPI.showPlaylist(response);
-					} else if (response !== undefined && response.error !== undefined) {
+						// Get the PMF to display
+						MshuffleClientAPI.getPMF();
+					} else if (response && response.error) {
 						// Error getting playlists
 						console.log("Error: Mshuffle Client API - " + response.error);
 					}
