@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "removeComments": false,
+        "sourceMap": false,
+        "typeRoots": [
+            "../node_modules/@types",
+            "./js/types"
+        ],
+        "types": [
+            "jquery",
+            "chart.js"
+        ]
+    },
+    "include": [
+        "../shared/**/*",
+        "./js/**/*"
+    ],
+    "exclude": [
+        "../node_modules"
+    ]
+}

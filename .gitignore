@@ -1,1 +1,14 @@
+# Node Modules
 /node_modules
+
+# VS Code
+/.vscode
+
+# Compiled Javascript
+/shared/**/*.js
+/lib/**/*.js
+mshuffle.js
+/site/js/mshuffle-bundle.js
+
+# JS maps
+**/*.js.map
