@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "removeComments": false,
+        "sourceMap": false,
+        "typeRoots": [
+            "../node_modules/@types",
+            "../lib/types",
+            "../site/js/types"
+        ]
+    },
+    "include": [
+        "../shared/**/*",
+        "../lib/**/*",
+        "../mshuffle.ts",
+        "../site/js/**/*",
+        "./mock/**/*",
+        "./shared/**/*",
+        "./lib/**/*",
+        "./site/js/**/*"
+    ],
+    "exclude": [
+        "../node_modules"
+    ]
+}

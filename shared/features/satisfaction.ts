@@ -51,8 +51,11 @@ export class SatisfactionAdjustmentFactor {
     public static IsSatisfactionAdjustmentFactor(factor: any): factor is SatisfactionAdjustmentFactor {
         return (factor !== undefined &&
             factor !== null &&
+            typeof(factor) === "object" &&
             "enjoy" in factor &&
-            "dislike" in factor);
+            typeof(factor.enjoy) === "function" &&
+            "dislike" in factor &&
+            typeof(factor.dislike) === "function");
     }
 }
 
@@ -94,6 +97,7 @@ export class SatisfactionAdjustmentFactorSet {
     public static IsSatisfactionAdjustmentFactorSet(factors: any): factors is SatisfactionAdjustmentFactorSet {
         return (factors !== undefined &&
             factors !== null &&
+            typeof(factors) === "object" &&
             "song" in factors &&
             SatisfactionAdjustmentFactor.IsSatisfactionAdjustmentFactor(factors.song) && 
             "album" in factors &&
@@ -135,9 +139,12 @@ export class SatisfactionSessionData {
     public static IsSatisfactionSessionData(data: any): data is SatisfactionSessionData {
         return (data !== undefined &&
             data !== null &&
+            typeof(data) === "object" &&
             "adjustments" in data &&
             SatisfactionAdjustmentFactorSet.IsSatisfactionAdjustmentFactorSet(data.adjustments) &&
             "albumSongs" in data &&
-            "artistSongs" in data);
+            IdToStringSet.IsIdToStringSet(data.albumSongs) &&
+            "artistSongs" in data &&
+            IdToStringSet.IsIdToStringSet(data.artistSongs));
     }
 }

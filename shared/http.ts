@@ -78,7 +78,7 @@ export class RequestError {
     /**
      * Make a generic 'Status: message' RequestError
      */
-    static generic(): RequestError {
+    public static generic(): RequestError {
         return RequestError.make(function (statusCode: number, errorMessage: string): void {
             console.error(`${statusCode}: ${errorMessage}`);
         });
@@ -89,7 +89,7 @@ export class RequestError {
      * @param operation Error function
      * @returns RequestError
      */
-    static make(operation: (statusCode: number, errorMessage: string) => void): RequestError {
+    public static make(operation: (statusCode: number, errorMessage: string) => void): RequestError {
         return {
             error: operation
         };
@@ -101,7 +101,7 @@ export class RequestError {
      * @param operation Error function
      * @returns RequestError
      */
-    static makeUnauthorized(operation: () => void): RequestError {
+    public static makeUnauthorized(operation: () => void): RequestError {
         return RequestError.make(function (statusCode: number, errorMessage: string): void {
             if (statusCode === 401) {
                 operation();
@@ -117,7 +117,7 @@ export class RequestError {
      * @param operation Error function
      * @returns RequestError
      */
-    static makeForbidden(operation: () => void): RequestError {
+    public static makeForbidden(operation: () => void): RequestError {
         return RequestError.make(function (statusCode: number, errorMessage: string): void {
             if (statusCode === 403) {
                 operation();
@@ -192,7 +192,7 @@ export class RequestSuccess {
      * @param operation Success function
      * @returns RequestSuccess
      */
-    static make(operation: (data?: any) => void): RequestSuccess {
+    public static make(operation: (data?: any) => void): RequestSuccess {
         return {
             success: operation
         };

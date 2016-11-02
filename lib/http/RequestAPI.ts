@@ -19,7 +19,10 @@ export default class RequestAPI extends HttpRequestAPI {
      * @param error Request error to call on error
      */
     delete(options: RequestOptions, success: RequestSuccess, error: RequestError): void {
-        this.request("DELETE", options, success, error);
+        let requestOptions = this.getRequestOptions("DELETE", options),
+            callback = this.getCallback(success, error);
+        
+        request.del(requestOptions, callback);
     }
 
     /**
@@ -29,7 +32,10 @@ export default class RequestAPI extends HttpRequestAPI {
      * @param error Request error to call on error
      */
     get(options: RequestOptions, success: RequestSuccess, error: RequestError): void {
-        this.request("GET", options, success, error);
+        let requestOptions = this.getRequestOptions("DELETE", options),
+            callback = this.getCallback(success, error);
+
+        request.get(requestOptions, callback);
     }
 
     /**
@@ -39,7 +45,10 @@ export default class RequestAPI extends HttpRequestAPI {
      * @param error Request error to call on error
      */
     post(options: RequestOptions, success: RequestSuccess, error: RequestError): void {
-        this.request("POST", options, success, error);
+        let requestOptions = this.getRequestOptions("DELETE", options),
+            callback = this.getCallback(success, error);
+
+        request.post(requestOptions, callback);
     }
 
     /**
@@ -49,18 +58,20 @@ export default class RequestAPI extends HttpRequestAPI {
      * @param error Request error to call on error
      */
     put(options: RequestOptions, success: RequestSuccess, error: RequestError): void {
-        this.request("PUT", options, success, error);
+        let requestOptions = this.getRequestOptions("DELETE", options),
+            callback = this.getCallback(success, error);
+            
+        request.put(requestOptions, callback);
     }
 
     /**
-     * Send an Http request using request
-     * @param type Request type as string
+     * Get Request options
+     * @param type Request type
      * @param options Request options
-     * @param success Request success to call on success
-     * @param error Request error to call on error
+     * @returns Request module's needed request options
      */
-    private request(type: string, options: RequestOptions, success: RequestSuccess, error: RequestError): void {
-        let reqOptions = {
+    private getRequestOptions(type: string, options: RequestOptions): request.RequiredUriUrl & request.CoreOptions {
+        return {
             url: options.url,
             method: type,
             headers: options.headers,
@@ -68,19 +79,25 @@ export default class RequestAPI extends HttpRequestAPI {
             body: (options.data !== undefined) ? options.data : undefined,
             form: (options.urlEncodedForm !== undefined)? options.urlEncodedForm : undefined
         };
+    }
 
-        let reqCallback: request.RequestCallback = function (errorResponse, incomingMessage, responseBody): void {
+    /**
+     * Get callback
+     * @param success Request success
+     * @param error Request error
+     * @returns Callback function for Request module
+     */
+    private getCallback(success: RequestSuccess, error: RequestError): request.RequestCallback {
+        return function (errorResponse, incomingMessage, responseBody) {
             if (errorResponse) {
                 error.error(errorResponse.status, errorResponse.message);
             } else if (incomingMessage.statusCode !== 200) {
                 error.error(incomingMessage.statusCode, incomingMessage.statusMessage)
             } else if (responseBody && responseBody.error) {
                 error.error(responseBody.error.status, responseBody.error.message);
-            } else if (responseBody) {
+            } else {
                 success.success(responseBody);
             }
         };
-
-        request(reqOptions, reqCallback);
     }
 }

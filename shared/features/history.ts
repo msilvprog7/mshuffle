@@ -60,14 +60,21 @@ export interface HistoryQueue extends ListeningFeatureSession {
 }
 
 export class HistoryQueue {
+    /**
+     * History queue's type guard
+     */
     public static IsHistoryQueue(queue: any): queue is HistoryQueue {
         return (queue !== undefined &&
             queue !== null &&
+            typeof(queue) === "object" && 
             "queue" in queue &&
             Identifiable.AreIds(queue.queue) &&
             "set" in queue &&
+            StringSet.IsStringSet(queue.set) && 
             "capacity" in queue &&
-            "storedSongProbabilities" in queue);
+            typeof(queue.capacity) === "number" &&
+            "storedSongProbabilities" in queue &&
+            IdToNumber.IsIdToNumber(queue.storedSongProbabilities));
     }
 }
 
@@ -93,6 +100,8 @@ export class Capacity {
     public static IsCapacity(capacity: any): capacity is Capacity {
         return (capacity !== undefined &&
             capacity !== null &&
-            "capacity" in capacity);
+            typeof(capacity) === "object" &&
+            "capacity" in capacity &&
+            typeof(capacity.capacity) === "number");
     }
 }

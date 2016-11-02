@@ -64,4 +64,12 @@ export default class CollectiveDataStore extends BaseCollectiveDataStore {
         this.datastore[collectiveData.id] = collectiveData;
         return true;
     }
+
+    /**
+     * Get the datastore
+     * @returns IdToCollectiveData
+     */
+    getDatastore(): IdToCollectiveData {
+        return this.datastore;
+    }
 }

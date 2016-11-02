@@ -83,6 +83,14 @@ export class CollectiveData extends Identifiable {
             return valueStored.add(value);
         }
     }
+
+    /**
+     * Get data stored
+     * @returns IdToCollectiveDataValue
+     */
+    getData(): IdToCollectiveDataValue {
+        return this.data;
+    }
 }
 
 /**
@@ -117,6 +125,7 @@ export class PMFData {
     public static IsPMF(pmf: any): pmf is PMFData {
         return (pmf !== undefined &&
             pmf !== null &&
+            typeof(pmf) === "object" && 
             "data" in pmf &&
             LabeledDataValue.AreLabeledDataValues(pmf.data));
     }
@@ -151,10 +160,42 @@ export interface IdToNumber {
 }
 
 /**
+ * IdToNumber's static functions
+ */
+export class IdToNumber {
+    /**
+     * IdToNumber's type guard
+     */
+    public static IsIdToNumber(mapping?: any): mapping is IdToNumber {
+        return (mapping !== undefined &&
+            mapping !== null &&
+            typeof(mapping) === "object" && 
+            Object.keys(mapping).every(key => typeof(key) === "string") &&
+            Object.keys(mapping).every(key => typeof(mapping[key]) === "number"));
+    }
+}
+
+/**
  * Indexer from id to string set
  */
 export interface IdToStringSet {
     [index: string]: StringSet;
+}
+
+/**
+ * Static methods for IdToStringSet
+ */
+export class IdToStringSet {
+    /**
+     * IdToStringSet's type guard
+     */
+    public static IsIdToStringSet(mapping?: any): mapping is IdToStringSet {
+        return (mapping !== undefined &&
+            mapping !== null &&
+            typeof(mapping) === "object" && 
+            Object.keys(mapping).every(key => typeof(key) === "string") &&
+            Object.keys(mapping).every(key => StringSet.IsStringSet(mapping[key])));
+    }
 }
 
 /**
@@ -223,8 +264,11 @@ export class LabeledDataValue {
     public static IsLabeledDataValue(value: any): value is LabeledDataValue {
         return (value !== undefined &&
             value !== null &&
+            typeof(value) === "object" &&
             "label" in value &&
-            "value" in value);
+            typeof(value.label) === "string" &&
+            "value" in value &&
+            typeof(value.value) === "number");
     }
 }
 
@@ -242,4 +286,19 @@ export interface NameValue<V> {
  */
 export interface StringSet {
     [index: string]: boolean;
+}
+/**
+ * StringSet static functions
+ */
+export class StringSet {
+    /**
+     * StringSet's type guard
+     */
+    public static IsStringSet(set?: any): set is StringSet {
+        return (set !== undefined &&
+            set !== null &&
+            typeof(set) === "object" &&
+            Object.keys(set).every(key => typeof(key) === "string") &&
+            Object.keys(set).every(key => typeof(set[key]) === "boolean"));
+    }
 }

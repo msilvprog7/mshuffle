@@ -6,9 +6,9 @@ import {RequestHeaders, uri} from "./http";
 
 
 /**
- * Declare Buffer 
+ * Crypto
  */
-declare const Buffer;
+const crypto = require("crypto");
 
 /**
  * Type alias for an Id
@@ -57,8 +57,12 @@ export class Authorization {
     public static GetAuthBasicHeader(creds: ClientCredentials): RequestHeaders {
         let headers: RequestHeaders = {};
 
-        headers["Authorization"] = 'Basic ' + 
-                        (new Buffer(`${creds.clientId}:${creds.clientSecret}`).toString('base64'));
+        if (creds.clientId != null && creds.clientSecret != null) {
+            headers["Authorization"] = 'Basic ' + 
+                            (new Buffer(`${creds.clientId}:${creds.clientSecret}`).toString('base64'));
+        } else {
+            headers["Authorization"] = null;
+        }
 
         return headers;
     }
@@ -71,19 +75,27 @@ export class Authorization {
     public static GetAuthBearerHeader(auth: Authorization): RequestHeaders {
         let headers: RequestHeaders = {};
 
-        headers["Authorization"] = `Bearer ${auth.accessToken}`;
+        if (auth.accessToken != null) {
+            headers["Authorization"] = `Bearer ${auth.accessToken}`;
+        } else {
+            headers["Authorization"] = null;
+        }
 
         return headers;
     }
 
     /**
-     * Hash authorization into a one-way hashed value
+     * Hash authorization into an sha 512 hashed value
      * @param auth Auth to Encrypt
      * @returns Hashed value
      */
     public static Hash(auth: Authorization): string {
-        // TODO: Hash with some form of one-way hashing
-        return auth.accessToken;
+        if (auth.accessToken == null) {
+            return null;
+        }
+
+        let hash = crypto.createHash("sha512");
+        return hash.update(auth.accessToken).digest("base64");
     }
 
     /**
@@ -92,8 +104,11 @@ export class Authorization {
     public static IsAuthorization(auth: any): auth is Authorization {
         return (auth !== undefined &&
             auth !== null &&
+            typeof(auth) === "object" &&
             "accessToken" in auth &&
-            "refreshToken" in auth);
+            (auth.accessToken === null || typeof(auth.accessToken) === "string") &&
+            "refreshToken" in auth &&
+            (auth.refreshToken === null || typeof(auth.refreshToken) === "string"));
     }
 
     /**
@@ -184,6 +199,7 @@ export class Identifiable {
     public static IsIdentifiable(identifiable: any): identifiable is Identifiable {
         return (identifiable !== undefined &&
             identifiable !== null &&
+            typeof(identifiable) === "object" &&
             "id" in identifiable &&
             Identifiable.IsId(identifiable.id));
     }
@@ -209,6 +225,8 @@ export class User {
     public static IsUser(user: any): user is User {
         return (user !== undefined &&
             user !== null &&
-            "fullname" in user);
+            typeof(user) === "object" &&
+            "fullname" in user &&
+            typeof(user.fullname) === "string");
     }
 }

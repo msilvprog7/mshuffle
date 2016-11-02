@@ -20,6 +20,7 @@ You will need [NodeJS](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/)
 
 ```
 npm install -g gulp-cli
+npm install -g mocha
 npm install
 ```
 
@@ -30,6 +31,10 @@ npm install
 `package.json` has a `prestart` command that will run a __clean-build__ (Gulp default task) on both the site and lib.
 
 Be sure to edit `prestart` for the appropriate build tool you would like to run (either __.bat__ or __.sh__).
+
+### Tests
+
+[Mocha](http://mochajs.org/) is used for a test framework along with [Chai](http://chaijs.com/) for an assertion library.
 
 
 ## Running

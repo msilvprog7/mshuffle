@@ -66,9 +66,13 @@ export class Album {
     public static IsAlbum(album: any): album is Album {
         return (album !== undefined &&
             album !== null &&
+            typeof(album) === "object" &&
             "id" in album &&
+            Identifiable.IsId(album.id) &&
             "image" in album &&
-            "name" in album);
+            typeof(album.image) === "string" &&
+            "name" in album &&
+            typeof(album.name) === "string");
     }
 }
 
@@ -126,8 +130,11 @@ export class Artist {
     public static IsArtist(artist: any): artist is Artist {
         return (artist !== undefined &&
             artist !== null &&
+            typeof(artist) === "object" &&
             "id" in artist &&
-            "name" in artist);
+            Identifiable.IsId(artist.id) &&
+            "name" in artist &&
+            typeof(artist.name) === "string");
     }
 }
 
@@ -205,14 +212,19 @@ export class Playlist {
     public static IsPlaylist(playlist: any): playlist is Playlist {
         return (playlist !== undefined &&
             playlist !== null &&
+            typeof(playlist) === "object" &&
             "id" in playlist && 
+            Identifiable.IsId(playlist.id) &&
             "description" in playlist && 
+            typeof(playlist.description) === "string" &&
             "image" in playlist && 
+            (playlist.image === null || typeof(playlist.image) === "string") &&
             "name" in playlist && 
+            typeof(playlist.name) === "string" &&
             "owner" in playlist &&
+            Identifiable.IsId(playlist.owner) &&
             "songs" in playlist &&
-            (playlist.songs === null || 
-             Song.AreSongs(playlist.songs)));
+            (playlist.songs === null || Song.AreSongs(playlist.songs)));
     }
 }
 
@@ -295,12 +307,19 @@ export class Song {
     public static IsSong(song: any): song is Song {
         return (song !== undefined &&
             song !== null &&
+            typeof(song) === "object" &&
             "id" in song &&
-            "album" in song && Album.IsAlbum(song.album) &&
-            "artists" in song && Artist.AreArtists(song.artists) &&
+            Identifiable.IsId(song.id) &&
+            "album" in song && 
+            Album.IsAlbum(song.album) &&
+            "artists" in song && 
+            Artist.AreArtists(song.artists) &&
             "duration" in song && 
+            typeof(song.duration) === "number" &&
             "name" in song && 
-            "uri" in song);
+            typeof(song.name) === "string" &&
+            "uri" in song &&
+            typeof(song.uri) === "string");
     }
 }
 

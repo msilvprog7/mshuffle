@@ -12,7 +12,7 @@ export default class StringSetCollectiveDataValue extends CollectiveDataValue {
      * @param id Id
      * @param value StringSet
      */
-    constructor(id: Id, public readonly value: StringSet) {
+    constructor(id: Id, public value: StringSet = {}) {
         super(id);
     }
 
@@ -20,8 +20,12 @@ export default class StringSetCollectiveDataValue extends CollectiveDataValue {
      * Add the value to the current value
      */
     add(value: CollectiveDataValue): boolean {
-        Object.keys(value).forEach(id => this.value[id] = true);
-        return true;
+        if (StringSetCollectiveDataValue.IsStringSetCollectiveDataValue(value)) {
+            Object.keys(value.value).forEach(id => this.value[id] = true);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -30,7 +34,10 @@ export default class StringSetCollectiveDataValue extends CollectiveDataValue {
     public static IsStringSetCollectiveDataValue(set: any): set is StringSetCollectiveDataValue {
         return (set !== undefined &&
             set !== null &&
+            typeof(set) === "object" &&
             "id" in set &&
-            "value" in set);
+            typeof(set.id) === "string" &&
+            "value" in set &&
+            typeof(set.value) === "object");
     }
 }

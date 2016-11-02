@@ -164,6 +164,13 @@ export abstract class DisplayFeature implements Identifiable {
     }
 
     /**
+     * Get the parent display feature
+     */
+    getParent() {
+        return this.parent;
+    }
+
+    /**
      * Set the parent display feature
      */
     setParent(displayFeature: DisplayFeature) {

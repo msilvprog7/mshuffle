@@ -133,7 +133,15 @@ export default class HistoryFeature extends BaseHistoryFeature {
      * @returns Number of songs that can be held in the queue
      */
     private determineCapacity(queueSize: number, numSongs: number): number {
-        return (queueSize < 1) ? Math.round(queueSize * numSongs) : queueSize;
+        numSongs = Math.floor(numSongs);
+        
+        if (queueSize <= 0 || numSongs <= 0) {
+            return 0;
+        } else if (queueSize < 1) {
+            return Math.round(queueSize * numSongs);
+        } else {
+            return Math.min(Math.floor(queueSize), numSongs - 1);
+        }
     }
 
     /**

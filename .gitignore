@@ -9,6 +9,7 @@
 /lib/**/*.js
 mshuffle.js
 /site/js/mshuffle-bundle.js
+/test/build-js/**/*.js
 
 # JS maps
 **/*.js.map
